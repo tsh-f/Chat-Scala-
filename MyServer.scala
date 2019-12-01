@@ -1,11 +1,11 @@
-import java.io.{BufferedReader, BufferedWriter, InputStreamReader, OutputStreamWriter}
+import java.io.{BufferedReader, BufferedWriter, IOException, InputStreamReader, OutputStreamWriter}
 import java.net.{ServerSocket, Socket}
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Scanner
 
-object Server {
+object MyServer {
   def main(args: Array[String]): Unit = {
     new MyServer
   }
@@ -40,7 +40,10 @@ class Connection(socket: Socket, list: util.LinkedList[Connection]) extends Runn
           c.out.flush()
         })
       }
-    } finally {
+    }catch {
+      case e: IOException  => println("Connection " + socket.getInetAddress.getHostName + " lost" )
+    }
+    finally {
       list.remove(this)
       this.in.close()
       this.out.close()
